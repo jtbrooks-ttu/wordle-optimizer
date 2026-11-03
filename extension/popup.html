@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Wordle Optimizer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Wordle Optimizer</h1>
+    <button id="reset" class="link" title="Start a new game">New game</button>
+  </header>
+
+  <div id="history" class="board"></div>
+
+  <section id="entry">
+    <p class="status" id="status"></p>
+    <div class="suggestion">Suggested: <strong id="suggestion"></strong></div>
+
+    <label for="guess">Word you guessed</label>
+    <input id="guess" maxlength="5" autocomplete="off" spellcheck="false">
+
+    <p class="hint">Click each tile to set its color (gray → yellow → green).</p>
+    <div id="tiles" class="row"></div>
+
+    <p class="error" id="error"></p>
+    <button id="submit" class="primary">Submit feedback</button>
+  </section>
+
+  <section id="result" hidden>
+    <p id="result-text"></p>
+    <ul id="remaining"></ul>
+  </section>
+
+  <details id="candidates-box">
+    <summary>Possible words (<span id="cand-count">0</span>)</summary>
+    <p id="candidates"></p>
+  </details>
+
+  <script src="solver.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Wordle Optimizer",
+  "version": "1.0.0",
+  "description": "Suggests the best next Wordle guess based on positional letter frequency.",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "action": {
+    "default_title": "Wordle Optimizer",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon.svg",
+      "32": "icons/icon.svg"
+    }
+  },
+  "permissions": ["storage"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "wordle-optimizer@jtbrooks",
+      "strict_min_version": "109.0"
+    }
+  }
+}
