@@ -12,7 +12,7 @@
       <button id="open-sidebar" class="icon" title="Open in sidebar (stays open while you play)" aria-label="Open in sidebar">
         <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" fill="none" stroke="currentColor"/><rect x="10" y="3" width="4" height="10" fill="currentColor"/></svg>
       </button>
-      <button id="reset" class="link" title="Start a new game">New game</button>
+      <button id="reset" class="link" title="Start a new game">New case</button>
     </div>
   </header>
 
@@ -20,11 +20,11 @@
 
   <section id="entry">
     <p class="status" id="status"></p>
-    <div class="suggestion">Suggested <strong id="suggestion" title="Use this word"></strong></div>
+    <div class="suggestion">Best lead <strong id="suggestion" title="Use this word"></strong></div>
 
     <div id="tiles" class="row entry-row" tabindex="0" role="textbox"
          aria-label="Type your guess, then click each tile to set its color"></div>
-    <p class="hint">Type your guess, or press Enter to use the suggestion. Click a tile to change its color: gray → yellow → green. Press Enter to submit.</p>
+    <p class="hint">Type your guess, or press Enter to take the lead. Click a tile to mark it gray → yellow → green, then press Enter.</p>
 
     <p class="error" id="error"></p>
     <button id="submit" class="primary">Submit</button>
@@ -36,7 +36,7 @@
   </section>
 
   <details id="candidates-box">
-    <summary>Possible words (<span id="cand-count">0</span>)</summary>
+    <summary>Suspects (<span id="cand-count">0</span>)</summary>
     <p id="candidates"></p>
   </details>
 

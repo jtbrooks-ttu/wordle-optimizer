@@ -117,16 +117,17 @@ function render() {
   // End states
   let message = null;
   if (solved) {
-    message = `Solved in ${history.length} guess${history.length > 1 ? "es" : ""}.`;
+    message = `Case closed · ${history.length} guess${history.length > 1 ? "es" : ""}`;
   } else if (history.length && candidates.length === 0) {
-    message = "No words left that match. Check the colors you entered, " +
-              "or the answer isn't in the word list.";
+    message = "The trail's gone cold: no words match. Check the colors " +
+              "you entered, or the answer isn't in the word list.";
   } else if (history.length >= MAX_GUESSES) {
-    message = "Out of guesses. Remaining possibilities:";
+    message = "Out of guesses. Still at large:";
   }
 
   $("entry").hidden = message !== null;
   $("result").hidden = message === null;
+  $("result").classList.toggle("solved", Boolean(solved));
   $("candidates-box").hidden = solved;
 
   if (message !== null) {
@@ -145,7 +146,7 @@ function render() {
 
   suggestion = history.length ? bestWord(candidates, data.scores) : data.best_start;
   $("status").textContent =
-    `Guess ${turn} of ${MAX_GUESSES} · ${candidates.length} possible word${candidates.length === 1 ? "" : "s"}`;
+    `Guess ${turn} of ${MAX_GUESSES} · ${candidates.length} suspect${candidates.length === 1 ? "" : "s"}`;
   $("suggestion").textContent = suggestion;
   $("error").textContent = "";
   letters = "";
