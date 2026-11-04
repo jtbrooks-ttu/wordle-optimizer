@@ -13,7 +13,7 @@ let history = [];   // [{ guess, feedback }]
 // Entry row state
 let letters = "";      // what's typed in the big tiles
 let colors = "xxxxx";  // feedback for each tile
-let pristine = true;   // row still shows the untouched suggestion
+let suggestion = "";   // shown faintly in the empty row until you type or accept it
 
 const $ = (id) => document.getElementById(id);
 const isSidebar = new URLSearchParams(location.search).get("view") === "sidebar";
@@ -28,20 +28,22 @@ function tile(letter, color) {
 function renderTiles() {
   const row = $("tiles");
   row.replaceChildren();
-  row.classList.toggle("pristine", pristine);
+  const showGhost = letters.length === 0;
+  row.classList.toggle("ghost", showGhost);
   for (let i = 0; i < WORD_LENGTH; i++) {
-    const el = tile(letters[i], colors[i]);
+    const el = showGhost ? tile(suggestion[i], "x") : tile(letters[i], colors[i]);
     if (i === letters.length) el.classList.add("cursor");
     el.addEventListener("mousedown", (e) => e.preventDefault()); // keep focus on the row
     el.addEventListener("click", () => {
       row.focus();
       if (!letters[i]) return;
-      pristine = false;
       colors = colors.slice(0, i) + NEXT_COLOR[colors[i]] + colors.slice(i + 1);
       renderTiles();
     });
     row.appendChild(el);
   }
+  // The main button either fills in the suggestion or submits the guess
+  $("submit").textContent = showGhost ? `Use ${suggestion.toUpperCase()}` : "Submit";
 }
 
 function setLetters(next) {
@@ -52,29 +54,35 @@ function setLetters(next) {
   renderTiles();
 }
 
-function typeLetter(ch) {
-  if (pristine) {
-    // The first keystroke replaces the suggested word
-    pristine = false;
-    colors = "xxxxx";
-    setLetters(ch);
-  } else if (letters.length < WORD_LENGTH) {
-    setLetters(letters + ch);
-  }
+function useSuggestion() {
+  colors = "xxxxx";
+  setLetters(suggestion);
+  $("tiles").focus();
+}
+
+// Enter / the main button: accept the suggestion if the row is empty, else submit
+function primaryAction() {
+  if (letters.length === 0) useSuggestion();
+  else submit();
 }
 
 function onKeyDown(e) {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === "Enter") {
     e.preventDefault();
-    submit();
+    primaryAction();
+  } else if (e.key === "Tab" && letters.length === 0 && !e.shiftKey) {
+    e.preventDefault();
+    useSuggestion();
+  } else if (e.key === "Escape" && letters.length) {
+    e.preventDefault();
+    setLetters("");
   } else if (e.key === "Backspace") {
     e.preventDefault();
-    pristine = false;
     setLetters(letters.slice(0, -1));
   } else if (/^[a-zA-Z]$/.test(e.key)) {
     e.preventDefault();
-    typeLetter(e.key.toLowerCase());
+    if (letters.length < WORD_LENGTH) setLetters(letters + e.key.toLowerCase());
   }
 }
 
@@ -82,7 +90,6 @@ function onPaste(e) {
   const text = (e.clipboardData.getData("text") || "").toLowerCase().replace(/[^a-z]/g, "");
   if (!text) return;
   e.preventDefault();
-  pristine = false;
   colors = "xxxxx";
   setLetters(text.slice(0, WORD_LENGTH));
 }
@@ -136,14 +143,13 @@ function render() {
     return;
   }
 
-  const suggestion = history.length ? bestWord(candidates, data.scores) : data.best_start;
+  suggestion = history.length ? bestWord(candidates, data.scores) : data.best_start;
   $("status").textContent =
     `Guess ${turn} of ${MAX_GUESSES} · ${candidates.length} possible word${candidates.length === 1 ? "" : "s"}`;
   $("suggestion").textContent = suggestion;
   $("error").textContent = "";
-  letters = suggestion;
+  letters = "";
   colors = "xxxxx";
-  pristine = true;
   renderTiles();
   $("tiles").focus();
 }
@@ -196,7 +202,8 @@ async function init() {
   const row = $("tiles");
   row.addEventListener("keydown", onKeyDown);
   row.addEventListener("paste", onPaste);
-  $("submit").addEventListener("click", submit);
+  $("submit").addEventListener("click", primaryAction);
+  $("suggestion").addEventListener("click", useSuggestion);
   $("reset").addEventListener("click", reset);
   if (api.sidebarAction) {
     $("open-sidebar").addEventListener("click", openSidebar);

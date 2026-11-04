@@ -125,13 +125,14 @@ button.primary:hover { background: transparent; color: var(--text); }
 .entry-row .tile.empty { cursor: text; }
 .entry-row:focus .tile.cursor { border-color: var(--text); }
 
-/* The suggestion sits in the row as a faint ghost until you type or click */
-.entry-row.pristine .tile {
+/* Empty row: the suggestion shows as faint placeholder letters */
+.entry-row.ghost .tile {
   background: transparent;
   border-color: var(--border);
   color: var(--ghost);
+  cursor: text;
 }
-.entry-row.pristine:focus .tile { border-color: var(--border-hi); }
+.entry-row.ghost:focus .tile.cursor { border-color: var(--text); }
 
 .status { margin: 0 0 4px; color: var(--muted); font-size: 12px; }
 
@@ -144,10 +145,13 @@ button.primary:hover { background: transparent; color: var(--text); }
 }
 .suggestion strong {
   margin-left: 4px;
+  cursor: pointer;
   color: var(--text);
   font: 700 16px Georgia, "Times New Roman", serif;
   letter-spacing: 3px;
 }
+
+.suggestion strong:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .hint { margin: 8px 0 0; color: var(--muted); font-size: 11.5px; }
 .error { color: var(--danger); min-height: 1em; margin: 6px 0 0; }
