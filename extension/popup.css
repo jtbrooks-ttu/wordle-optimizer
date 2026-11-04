@@ -1,54 +1,99 @@
+/* Noir theme: near-black, silver and cream, with muted feedback colors */
 :root {
-  --green: #6aaa64;
-  --yellow: #c9b458;
-  --gray: #787c7e;
-  --border: #d3d6da;
-  --text: #1a1a1b;
-  --muted: #6b6b6b;
+  --bg: #0b0b0c;
+  --surface: #151517;
+  --border: #2f2f34;
+  --border-hi: #5a5a61;
+  --text: #ecebe6;
+  --muted: #8b8b91;
+  --ghost: #5d5d63;
+  --green: #4a7a50;
+  --yellow: #a68c3a;
+  --gray: #333338;
+  --danger: #d0675d;
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { background: var(--bg); }
 
 body {
   width: 300px;
-  margin: 0;
-  padding: 12px 14px 14px;
-  font: 13px/1.4 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0 auto;
+  padding: 14px 16px 16px;
+  font: 13px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text);
-  background: #fff;
+  background:
+    radial-gradient(ellipse at 50% 0%, #1d1d21 0%, transparent 70%),
+    var(--bg);
 }
+
+/* Sidebar: fill the panel, but keep the tiles from getting huge */
+html.sidebar, html.sidebar body { min-height: 100%; }
+html.sidebar body { width: auto; max-width: 360px; }
+html.sidebar #open-sidebar { display: none; }
 
 header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
 }
 
-h1 { font-size: 16px; margin: 0; }
+h1 {
+  margin: 0;
+  white-space: nowrap;
+  font: 600 14px/1 Georgia, "Times New Roman", serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+h1 span { color: var(--muted); font-weight: 400; }
 
 button { font: inherit; cursor: pointer; }
 
-button.link {
+.actions { display: flex; align-items: center; gap: 8px; }
+header { align-items: center; }
+
+button.icon {
+  display: flex;
+  padding: 2px;
   background: none;
   border: none;
-  color: #2a6fdb;
-  padding: 0;
+  color: var(--muted);
 }
+button.icon:hover { color: var(--text); }
+
+button.link {
+  white-space: nowrap;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+button.link:hover { color: var(--text); }
 
 button.primary {
   width: 100%;
-  margin-top: 6px;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  background: var(--green);
-  color: #fff;
-  font-weight: 600;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid var(--text);
+  border-radius: 2px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
-button.primary:hover { filter: brightness(1.05); }
+button.primary:hover { background: transparent; color: var(--text); }
 
-.board { display: grid; gap: 5px; margin-bottom: 10px; }
+.board { display: grid; gap: 5px; margin-bottom: 12px; }
 .board:empty { display: none; }
 
 .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
@@ -59,50 +104,73 @@ button.primary:hover { filter: brightness(1.05); }
   align-items: center;
   justify-content: center;
   border: 2px solid var(--border);
-  font-size: 22px;
-  font-weight: 700;
+  border-radius: 2px;
+  font: 700 24px/1 Georgia, "Times New Roman", serif;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text);
   user-select: none;
+  transition: background-color 0.12s, border-color 0.12s;
 }
 .tile.x { background: var(--gray); border-color: var(--gray); }
 .tile.y { background: var(--yellow); border-color: var(--yellow); }
 .tile.g { background: var(--green); border-color: var(--green); }
-.tile.empty { background: #fff; color: var(--text); }
-
-#tiles .tile { cursor: pointer; }
-#tiles .tile:hover { filter: brightness(1.1); }
+.tile.empty { background: transparent; }
 
 .board .tile { font-size: 16px; }
 
-.status { margin: 0 0 4px; color: var(--muted); }
-.suggestion { font-size: 15px; margin-bottom: 8px; }
-.suggestion strong { letter-spacing: 1px; text-transform: uppercase; }
+/* Entry row: you type straight into the tiles */
+.entry-row { outline: none; margin-top: 4px; }
+.entry-row .tile { cursor: pointer; }
+.entry-row .tile:hover { border-color: var(--border-hi); }
+.entry-row .tile.empty { cursor: text; }
+.entry-row:focus .tile.cursor { border-color: var(--text); }
 
-label { display: block; font-weight: 600; margin-bottom: 3px; }
+/* The suggestion sits in the row as a faint ghost until you type or click */
+.entry-row.pristine .tile {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--ghost);
+}
+.entry-row.pristine:focus .tile { border-color: var(--border-hi); }
 
-input {
-  width: 100%;
-  padding: 6px 8px;
-  font: inherit;
-  font-size: 15px;
-  letter-spacing: 2px;
+.status { margin: 0 0 4px; color: var(--muted); font-size: 12px; }
+
+.suggestion {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  border: 1px solid var(--border);
-  border-radius: 4px;
+}
+.suggestion strong {
+  margin-left: 4px;
+  color: var(--text);
+  font: 700 16px Georgia, "Times New Roman", serif;
+  letter-spacing: 3px;
 }
 
-.hint { margin: 8px 0 6px; color: var(--muted); font-size: 12px; }
-.error { color: #c0392b; min-height: 1em; margin: 6px 0 0; }
+.hint { margin: 8px 0 0; color: var(--muted); font-size: 11.5px; }
+.error { color: var(--danger); min-height: 1em; margin: 6px 0 0; }
 
-#result p { font-size: 15px; font-weight: 600; }
+#result p {
+  font: 600 15px/1.4 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.5px;
+}
 #remaining { padding-left: 18px; margin: 4px 0; text-transform: uppercase; }
 
-details { margin-top: 10px; color: var(--muted); }
+details {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+summary { cursor: pointer; }
+summary:hover { color: var(--text); }
 details p {
   max-height: 120px;
   overflow-y: auto;
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   text-transform: uppercase;
   word-spacing: 4px;
+  scrollbar-color: var(--border-hi) transparent;
 }

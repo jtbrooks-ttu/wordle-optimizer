@@ -15,6 +15,18 @@
       "32": "icons/icon.svg"
     }
   },
+  "sidebar_action": {
+    "default_title": "Wordle Optimizer",
+    "default_panel": "popup.html?view=sidebar",
+    "default_icon": "icons/icon.svg",
+    "open_at_install": false
+  },
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": { "default": "Alt+Shift+W" },
+      "description": "Toggle the Wordle Optimizer sidebar"
+    }
+  },
   "permissions": ["storage"],
   "browser_specific_settings": {
     "gecko": {
