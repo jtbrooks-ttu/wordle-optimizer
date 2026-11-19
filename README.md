@@ -18,6 +18,7 @@ highest-scoring word left is suggested.
 ```bash
 python3 score.py     # regenerate word_scores.json from words.txt
 python3 lookup.py    # play interactively
+python3 TOSTA.py     # TOSTA: the whole algorithm in one short, annotated file
 ```
 
 When `lookup.py` asks for colors, type `g` for green, `y` for yellow and `x` for gray (for example `xgyxx`).
